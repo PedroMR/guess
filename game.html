@@ -39,8 +39,10 @@
   }
   .btn:active { background: #c0374d; }
   .btn.secondary { background: #16213e; border: 2px solid #e94560; }
-  .btn.skip { background: #555; }
-  .btn.skip:active { background: #444; }
+  .btn.correct { background: rgb(37, 168, 68); }
+  .btn.correct:active { background: rgb(45, 206, 83); }
+  .btn.skip { background: rgb(229, 100, 2); }
+  .btn.skip:active { background: rgb(232, 121, 36); }
 
   .language-option {
     display: flex; align-items: center; gap: 0.6rem;
@@ -262,8 +264,8 @@
       </div>
     </div>
   </div>
-  <button class="btn" id="guessed-btn">Guessed!</button>
-  <button class="btn skip" id="skip-btn">Skip</button>
+  <button class="btn correct" id="guessed-btn">Correct!</button>
+  <button class="btn skip" id="skip-btn">?What?</button>
 </div>
 
 <!-- TURN SUMMARY SCREEN -->
