@@ -7,7 +7,7 @@ import re
 import sys
 
 CSV_FILE = "cards.csv"
-HTML_FILE = "index.html"
+HTML_FILE = "game.html"
 
 def main():
     # Read cards from CSV
