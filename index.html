@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Guess What?</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #1a1a2e;
+    color: #eee;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    text-align: center;
+  }
+  .screen { display: none; width: 100%; max-width: 400px; }
+  .screen.active { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+  h2 { font-size: 1.4rem; color: #e94560; }
+  h3 { font-size: 1.1rem; color: #aaa; }
+  p { line-height: 1.5; color: #ccc; }
+  .btn {
+    background: #e94560;
+    color: #fff;
+    border: none;
+    padding: 0.9rem 2rem;
+    font-size: 1.1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 300px;
+    transition: background 0.2s;
+  }
+  .btn:active { background: #c0374d; }
+  .btn.secondary { background: #16213e; border: 2px solid #e94560; }
+  .btn.skip { background: #555; }
+  .btn.skip:active { background: #444; }
+
+  .language-option {
+    display: flex; align-items: center; gap: 0.6rem;
+    background: #16213e; padding: 0.8rem 1.2rem; border-radius: 10px;
+    cursor: pointer; width: 100%; max-width: 300px; font-size: 1.1rem;
+  }
+  .language-option input { width: 20px; height: 20px; accent-color: #e94560; }
+
+  .timer {
+    font-size: 3rem; font-weight: bold; color: #e94560;
+    font-variant-numeric: tabular-nums;
+  }
+  .timer.warning { color: #ff6b6b; animation: pulse 0.5s infinite alternate; }
+  @keyframes pulse { to { opacity: 0.5; } }
+
+  .card-box {
+    background: #16213e;
+    border-radius: 16px;
+    padding: 1.5rem;
+    width: 100%;
+  }
+  .card-title { font-size: 1.6rem; font-weight: bold; color: #fff; margin-bottom: 0.6rem; }
+  .card-desc { font-size: 0.95rem; color: #bbb; line-height: 1.5; }
+  .card-points { margin-top: 0.5rem; font-size: 0.85rem; color: #e94560; }
+
+  .round-badge {
+    background: #e94560;
+    padding: 0.3rem 1rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: bold;
+  }
+  .round-rule { background: #16213e; padding: 1rem; border-radius: 10px; width: 100%; }
+
+  .summary-item {
+    display: flex; justify-content: space-between;
+    padding: 0.4rem 0; border-bottom: 1px solid #2a2a4a;
+    width: 100%;
+  }
+  .summary-item .guessed { color: #4caf50; }
+  .summary-item .skipped { color: #777; }
+
+  .deck-info { color: #aaa; font-size: 0.95rem; }
+</style>
+</head>
+<body>
+
+<!-- SETUP SCREEN -->
+<div id="setup" class="screen active">
+  <h1>Guess What?</h1>
+  <p>Choose which languages to include:</p>
+  <label class="language-option"><input type="checkbox" value="all" id="lang-all" checked> All</label>
+  <label class="language-option"><input type="checkbox" value="en" id="lang-en"> English</label>
+  <label class="language-option"><input type="checkbox" value="br" id="lang-br"> Brazilian Portuguese</label>
+  <p id="card-count" class="deck-info"></p>
+  <button class="btn" id="start-game-btn">Start Game</button>
+</div>
+
+<!-- READY SCREEN -->
+<div id="ready" class="screen">
+  <span class="round-badge" id="ready-round"></span>
+  <h1>Ready for Next Turn!</h1>
+  <div class="round-rule" id="ready-rule"></div>
+  <p class="deck-info" id="ready-deck-info"></p>
+  <button class="btn" id="start-turn-btn">Start Turn</button>
+</div>
+
+<!-- PLAY SCREEN -->
+<div id="play" class="screen">
+  <div style="display:flex;justify-content:space-between;align-items:center;width:100%;">
+    <span class="round-badge" id="play-round"></span>
+    <span class="timer" id="timer">60</span>
+  </div>
+  <div class="round-rule" id="play-rule" style="font-size:0.85rem;padding:0.5rem 0.8rem;"></div>
+  <div class="card-box">
+    <div class="card-title" id="card-title"></div>
+    <div class="card-desc" id="card-desc"></div>
+    <div class="card-points" id="card-points"></div>
+  </div>
+  <button class="btn" id="guessed-btn">Guessed!</button>
+  <button class="btn skip" id="skip-btn">Skip</button>
+</div>
+
+<!-- TURN SUMMARY SCREEN -->
+<div id="summary" class="screen">
+  <h2>Turn Over!</h2>
+  <div id="summary-list" style="width:100%;"></div>
+  <p id="summary-total" style="font-size:1.2rem;font-weight:bold;"></p>
+  <button class="btn" id="summary-continue-btn">Continue</button>
+</div>
+
+<!-- GAME OVER SCREEN -->
+<div id="gameover" class="screen">
+  <h1>Game Over!</h1>
+  <p>You guessed all the cards across all 3 rounds!</p>
+  <button class="btn" id="play-again-btn">Play Again</button>
+</div>
+
+<script>
+const TURN_DURATION = 60;
+const DECK_SIZE = 3;
+const ROUND_RULES = [
+  'Round 1: Say anything you want &mdash; just don\'t use words from the title!',
+  'Round 2: Say only ONE word &mdash; and it can\'t be from the title!',
+  'Round 3: No talking! Mime it out!'
+];
+
+const allCards = [
+  {title:"King Lear",description:"Shakesperean regent who divides his kingdom across his daughters Goneril, Regan, and Cordelia.",points:3,language:"en"},
+  {title:"Narizinho",description:"Personagem principal nas historias de Monteiro Lobato sobre o S\u00edtio do Picapau-Amarelo, \u00e9 peralta e tem seu nome vindo de parte de sua anatomia que \u00e9 famosa por ser arrebitada.",points:4,language:"br"},
+  {title:"E.T.",description:"Movie named after its main character which is an alien that gets lost on Earth and is helped by a number of children including one played by Reese Whiterspoon. He heals Elliot with his finger and they fly in their bycicles.",points:2,language:"en"},
+  {title:"Percy Jackson",description:"Series of books where the main character is accused of stealing Zeus's lightning. He then goes on a road trip to prove his innocence and save his mother.",points:2,language:"en"},
+  {title:"Calliope",description:"One of the muses, in Neil Gaiman's famous Sandman stories she has a child with the main character, the lyre-playing Orpheus.",points:4,language:"en"},
+  {title:"Moloko",description:"Esta palavra significa 'leite' em Russo, e o nome de uma banda que o papai gosta, e descreve drogas no livro 'Laranja Mecanica' de Alexander Burguess.",points:5,language:"br"},
+  {title:"Ted Danson",description:"Actor who played characters in Cheers, A Good Place and Man on the Inside.",points:3,language:"en"},
+  {title:"Marie Antoinette",description:"A French aristocrat known for her elaborate silk gowns and even taller hair-dos who famously said 'Let them eat cake' when asked 'the people have no bread to eat.'",points:3,language:"en"},
+  {title:"Noite Estrelada",description:"Obra famosa por suas pinceladas de Vincent Van Gogh representando o que via nos ceus.",points:2,language:"br"},
+  {title:"Mona Lisa",description:"O quadro mais famoso do mundo, tamb\u00e9m conhecido como La Gioconda, pintado por Leonardo DaVinci. Atualmente exposta no Louvre, em Paris.",points:1,language:"br"},
+  {title:"Marion",description:"Caso rom\u00e2ntico mais famosa do arque\u00f3logo Indiana Jones, ela consegue segurar sua bebida e disparou as metralhadoras de um avi\u00e3o em que ficou presa.",points:3,language:"br"}
+];
+let filteredCards = [];
+let gameDeck = [];    // the full deck for the game (DECK_SIZE cards)
+let roundDeck = [];   // remaining cards this round
+let currentCard = null;
+let round = 1;
+let timerInterval = null;
+let timeLeft = 0;
+let turnResults = []; // {card, guessed}
+
+function loadCards() {
+  updateCardCount();
+}
+
+// --- Language Selection ---
+const langAll = document.getElementById('lang-all');
+const langEn = document.getElementById('lang-en');
+const langBr = document.getElementById('lang-br');
+
+langAll.addEventListener('change', () => {
+  if (langAll.checked) { langEn.checked = false; langBr.checked = false; }
+  updateCardCount();
+});
+langEn.addEventListener('change', () => {
+  if (langEn.checked || langBr.checked) langAll.checked = false;
+  if (!langEn.checked && !langBr.checked) langAll.checked = true;
+  updateCardCount();
+});
+langBr.addEventListener('change', () => {
+  if (langEn.checked || langBr.checked) langAll.checked = false;
+  if (!langEn.checked && !langBr.checked) langAll.checked = true;
+  updateCardCount();
+});
+
+function getFilteredCards() {
+  if (langAll.checked) return [...allCards];
+  const langs = [];
+  if (langEn.checked) langs.push('en');
+  if (langBr.checked) langs.push('br');
+  return allCards.filter(c => langs.includes(c.language));
+}
+
+function updateCardCount() {
+  filteredCards = getFilteredCards();
+  const el = document.getElementById('card-count');
+  el.textContent = `${filteredCards.length} cards available (${DECK_SIZE} will be selected)`;
+  document.getElementById('start-game-btn').disabled = filteredCards.length < DECK_SIZE;
+}
+
+// --- Screen Management ---
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// --- Shuffle ---
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// --- Game Start ---
+document.getElementById('start-game-btn').addEventListener('click', () => {
+  filteredCards = getFilteredCards();
+  if (filteredCards.length < DECK_SIZE) return;
+  gameDeck = shuffle([...filteredCards]).slice(0, DECK_SIZE);
+  round = 1;
+  startRound();
+});
+
+function startRound() {
+  roundDeck = shuffle([...gameDeck]);
+  showReadyScreen();
+}
+
+function showReadyScreen() {
+  document.getElementById('ready-round').textContent = `Round ${round} of 3`;
+  document.getElementById('ready-rule').innerHTML = ROUND_RULES[round - 1];
+  document.getElementById('ready-deck-info').textContent =
+    `${roundDeck.length} of ${gameDeck.length} cards remaining in deck`;
+  showScreen('ready');
+}
+
+// --- Turn ---
+document.getElementById('start-turn-btn').addEventListener('click', startTurn);
+
+function startTurn() {
+  turnResults = [];
+  timeLeft = TURN_DURATION;
+  showScreen('play');
+  document.getElementById('play-round').textContent = `Round ${round}`;
+  document.getElementById('play-rule').innerHTML = ROUND_RULES[round - 1];
+  updateTimer();
+  drawCard();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimer();
+    if (timeLeft <= 0) endTurn();
+  }, 1000);
+}
+
+function updateTimer() {
+  const el = document.getElementById('timer');
+  el.textContent = timeLeft;
+  el.classList.toggle('warning', timeLeft <= 10);
+}
+
+function drawCard() {
+  if (roundDeck.length === 0) {
+    endTurn();
+    return;
+  }
+  currentCard = roundDeck[roundDeck.length - 1];
+  document.getElementById('card-title').textContent = currentCard.title;
+  document.getElementById('card-desc').textContent = currentCard.description;
+  document.getElementById('card-points').textContent = `${currentCard.points} point${currentCard.points !== 1 ? 's' : ''}`;
+}
+
+document.getElementById('guessed-btn').addEventListener('click', () => {
+  if (!currentCard) return;
+  roundDeck.pop();
+  turnResults.push({ card: currentCard, guessed: true });
+  currentCard = null;
+  if (roundDeck.length === 0) {
+    endTurn();
+  } else {
+    drawCard();
+  }
+});
+
+document.getElementById('skip-btn').addEventListener('click', () => {
+  if (!currentCard) return;
+  // Move current card to front of deck (bottom of stack) so it comes back later
+  roundDeck.pop();
+  roundDeck.unshift(currentCard);
+  turnResults.push({ card: currentCard, guessed: false });
+  currentCard = null;
+  drawCard();
+});
+
+function endTurn() {
+  clearInterval(timerInterval);
+  currentCard = null;
+  showTurnSummary();
+}
+
+// --- Turn Summary ---
+function showTurnSummary() {
+  const list = document.getElementById('summary-list');
+  list.innerHTML = '';
+  let guessedCount = 0;
+  for (const r of turnResults) {
+    const div = document.createElement('div');
+    div.className = 'summary-item';
+    div.innerHTML = `<span>${r.card.title}</span><span class="${r.guessed ? 'guessed' : 'skipped'}">${r.guessed ? 'Guessed' : 'Skipped'}</span>`;
+    list.appendChild(div);
+  }
+  guessedCount = turnResults.filter(r => r.guessed).length;
+  document.getElementById('summary-total').textContent = `${guessedCount} card${guessedCount !== 1 ? 's' : ''} guessed this turn`;
+  showScreen('summary');
+}
+
+document.getElementById('summary-continue-btn').addEventListener('click', () => {
+  if (roundDeck.length === 0) {
+    // Round complete
+    if (round >= 3) {
+      showScreen('gameover');
+    } else {
+      round++;
+      startRound();
+    }
+  } else {
+    showReadyScreen();
+  }
+});
+
+// --- Play Again ---
+document.getElementById('play-again-btn').addEventListener('click', () => {
+  showScreen('setup');
+  updateCardCount();
+});
+
+// --- Init ---
+loadCards();
+</script>
+</body>
+</html>
