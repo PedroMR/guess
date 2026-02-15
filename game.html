@@ -209,6 +209,127 @@
   }
   .round-rule { background: #16213e; padding: 1rem; border-radius: 10px; width: 100%; }
 
+  /* --- Closed book cover for round screen --- */
+  .book-closed {
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+    border-radius: 4px 12px 12px 4px;
+    padding: 2.5rem 2rem;
+    /* Leather texture */
+    background:
+      radial-gradient(ellipse at 30% 20%, rgba(90,50,20,0.6) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 80%, rgba(60,30,10,0.5) 0%, transparent 50%),
+      linear-gradient(160deg, #5a3218 0%, #3d1f0e 25%, #4a2a14 50%, #35190a 75%, #4e2e16 100%);
+    box-shadow:
+      0 6px 24px rgba(0,0,0,0.5),
+      0 2px 6px rgba(0,0,0,0.3),
+      inset 0 1px 0 rgba(255,200,150,0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    text-align: center;
+  }
+  /* Spine edge on left side */
+  .book-closed::before {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0; left: 0;
+    width: 18px;
+    border-radius: 4px 0 0 4px;
+    background:
+      linear-gradient(to right,
+        rgba(30,15,5,0.7) 0%,
+        rgba(60,35,15,0.5) 30%,
+        rgba(90,55,25,0.3) 60%,
+        transparent 100%);
+  }
+  /* Page edges visible on right side */
+  .book-closed::after {
+    content: '';
+    position: absolute;
+    top: 8px; bottom: 8px; right: -6px;
+    width: 7px;
+    border-radius: 0 2px 2px 0;
+    background:
+      repeating-linear-gradient(to bottom,
+        #d8c8a0 0px, #c9b88e 1px, #e0d2b0 2px);
+    box-shadow: 1px 0 2px rgba(0,0,0,0.2);
+  }
+  /* Corner brass clasps on closed book */
+  .book-closed .brass-clasp.top-left { top: 8px; left: 24px; }
+  .book-closed .brass-clasp.top-right { top: 8px; right: 8px; }
+  .book-closed .brass-clasp.bottom-left { bottom: 8px; left: 24px; }
+  .book-closed .brass-clasp.bottom-right { bottom: 8px; right: 8px; }
+  /* Decorative border frame inset */
+  .book-closed-frame {
+    position: absolute;
+    top: 28px; bottom: 28px;
+    left: 40px; right: 22px;
+    border: 2px solid rgba(200,160,80,0.35);
+    border-radius: 3px;
+    pointer-events: none;
+  }
+  .book-closed-frame::before {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border: 1px solid rgba(200,160,80,0.18);
+    border-radius: 2px;
+  }
+  /* Title elements on the cover */
+  .book-closed-title {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #e8d26c;
+    text-shadow:
+      0 1px 2px rgba(0,0,0,0.6),
+      0 0 8px rgba(200,160,60,0.2);
+    position: relative;
+    z-index: 1;
+    margin-top: 0.5rem;
+  }
+  .book-closed-subtitle {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 1rem;
+    color: #c4a06a;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+    padding: 0 0.5rem;
+  }
+  .book-closed-round {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 0.85rem;
+    color: #b89050;
+    font-style: italic;
+    letter-spacing: 0.05em;
+    position: relative;
+    z-index: 1;
+  }
+  /* Ornamental divider */
+  .book-closed-divider {
+    width: 60%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(200,160,80,0.4), transparent);
+    position: relative;
+    z-index: 1;
+  }
+  .book-closed-divider::before {
+    content: '❖';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: rgba(200,160,80,0.45);
+    font-size: 0.8rem;
+    /*background:
+      linear-gradient(160deg, #4a2a14, #3d1f0e);*/
+    padding: 0 6px;
+  }
+
   .summary-item {
     display: flex; justify-content: space-between;
     padding: 0.4rem 0; border-bottom: 1px solid #2a2a4a;
@@ -218,6 +339,17 @@
   .summary-item .skipped { color: #777; }
 
   .deck-info { color: #aaa; font-size: 0.95rem; }
+
+  .btn-back {
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0.4rem 0;
+    transition: color 0.2s;
+  }
+  .btn-back:active { color: #ccc; }
 </style>
 </head>
 <body>
@@ -235,11 +367,22 @@
 
 <!-- READY SCREEN -->
 <div id="ready" class="screen">
-  <span class="round-badge" id="ready-round"></span>
-  <h1>Ready for Next Turn!</h1>
-  <div class="round-rule" id="ready-rule"></div>
-  <p class="deck-info" id="ready-deck-info"></p>
+  <div class="book-closed">
+    <span class="brass-clasp top-left"></span>
+    <span class="brass-clasp top-right"></span>
+    <span class="brass-clasp bottom-left"></span>
+    <span class="brass-clasp bottom-right"></span>
+    <div class="book-closed-frame"></div>
+    <div class="book-closed-round" id="ready-round"></div>
+    <div class="book-closed-divider"></div>
+    <div class="book-closed-title">Ready for<br>Next Turn!</div>
+    <div class="book-closed-divider"></div>
+    <div class="book-closed-subtitle" id="ready-rule"></div>
+    <div class="book-closed-divider"></div>
+    <div class="book-closed-round" id="ready-deck-info"></div>
+  </div>
   <button class="btn" id="start-turn-btn">Start Turn</button>
+  <button class="btn-back" id="back-ready-btn">Back to Menu</button>
 </div>
 
 <!-- PLAY SCREEN -->
@@ -248,7 +391,7 @@
     <span class="round-badge" id="play-round"></span>
     <span class="timer" id="timer">60</span>
   </div>
-  <div class="round-rule" id="play-rule" style="font-size:0.85rem;padding:0.5rem 0.8rem;"></div>
+  <!--div class="round-rule" id="play-rule" style="font-size:0.85rem;padding:0.5rem 0.8rem;"></div-->
   <div class="card-box-wrapper">
     <div class="book-cover">
       <span class="brass-clasp top-right"></span>
@@ -265,7 +408,8 @@
     </div>
   </div>
   <button class="btn correct" id="guessed-btn">Correct!</button>
-  <button class="btn skip" id="skip-btn">?What?</button>
+  <button class="btn skip" id="skip-btn">Skip</button>
+  <button class="btn-back" id="back-play-btn">Back to Menu</button>
 </div>
 
 <!-- TURN SUMMARY SCREEN -->
@@ -274,6 +418,25 @@
   <div id="summary-list" style="width:100%;"></div>
   <p id="summary-total" style="font-size:1.2rem;font-weight:bold;"></p>
   <button class="btn" id="summary-continue-btn">Continue</button>
+</div>
+
+<!-- CONFIRM QUIT SCREEN -->
+<div id="confirm-quit" class="screen">
+  <div class="book-closed">
+    <span class="brass-clasp top-left"></span>
+    <span class="brass-clasp top-right"></span>
+    <span class="brass-clasp bottom-left"></span>
+    <span class="brass-clasp bottom-right"></span>
+    <div class="book-closed-frame"></div>
+    <div class="book-closed-round">Leaving so soon?</div>
+    <div class="book-closed-divider"></div>
+    <div class="book-closed-title">Are You<br>Sure?</div>
+    <div class="book-closed-divider"></div>
+    <div class="book-closed-subtitle">You will lose all of your progress.</div>
+    <div class="book-closed-divider"></div>
+  </div>
+  <button class="btn" id="confirm-quit-yes">Yes, I'm sure!</button>
+  <button class="btn secondary" id="confirm-quit-no">Nevermind</button>
 </div>
 
 <!-- GAME OVER SCREEN -->
@@ -417,7 +580,8 @@ function startTurn() {
   timeLeft = TURN_DURATION;
   showScreen('play');
   document.getElementById('play-round').textContent = `Round ${round}`;
-  document.getElementById('play-rule').innerHTML = ROUND_RULES[round - 1];
+  if (document.getElementById('play-rule'))
+    document.getElementById('play-rule').innerHTML = ROUND_RULES[round - 1];
   updateTimer();
   drawCard();
   timerInterval = setInterval(() => {
@@ -506,6 +670,41 @@ document.getElementById('summary-continue-btn').addEventListener('click', () => 
 document.getElementById('play-again-btn').addEventListener('click', () => {
   showScreen('setup');
   updateCardCount();
+});
+
+// --- Back to Menu ---
+let returnScreen = null;
+
+document.getElementById('back-ready-btn').addEventListener('click', () => {
+  returnScreen = 'ready';
+  showScreen('confirm-quit');
+});
+
+document.getElementById('back-play-btn').addEventListener('click', () => {
+  returnScreen = 'play';
+  clearInterval(timerInterval);
+  showScreen('confirm-quit');
+});
+
+document.getElementById('confirm-quit-yes').addEventListener('click', () => {
+  returnScreen = null;
+  currentCard = null;
+  showScreen('setup');
+  updateCardCount();
+});
+
+document.getElementById('confirm-quit-no').addEventListener('click', () => {
+  if (returnScreen === 'play') {
+    showScreen('play');
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      updateTimer();
+      if (timeLeft <= 0) endTurn();
+    }, 1000);
+  } else {
+    showScreen(returnScreen || 'ready');
+  }
+  returnScreen = null;
 });
 
 // --- Init ---
