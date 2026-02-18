@@ -467,8 +467,8 @@ const ROUND_RULES = [
 ];
 
 const allCards = [
-  {title:"King Lear",description:"Shakesperean regent who divides his kingdom across his daughters Goneril, Regan, and Cordelia.",points:3,language:"en"},
-  {title:"Narizinho",description:"Personagem principal nas historias de Monteiro Lobato sobre o S\u00edtio do Picapau-Amarelo, \u00e9 peralta e tem seu nome vindo de parte de sua anatomia que \u00e9 famosa por ser arrebitada.",points:4,language:"br"},
+  {title:"King Lear",description:"Shakesperean regent who divides his kingdom across his daughters Goneril, Regan, and Cordelia.",points:2,language:"en"},
+  {title:"Narizinho",description:"Personagem principal nas hist\u00f3rias de Monteiro Lobato sobre o S\u00edtio do Picapau-Amarelo, \u00e9 peralta e tem seu nome vindo de parte de sua anatomia que \u00e9 famosa por ser arrebitada.",points:3,language:"br"},
   {title:"E.T.",description:"Movie named after its main character which is an alien that gets lost on Earth and is helped by a number of children including one played by Reese Whiterspoon. He heals Elliot with his finger and they fly in their bycicles.",points:2,language:"en"},
   {title:"Percy Jackson",description:"Main character in a book where he is accused of stealing Zeus's lightning. He then goes on a road trip to prove his innocence and save his mother.",points:2,language:"en"},
   {title:"Calliope",description:"One of the greek muses. In Neil Gaiman's Sandman stories she has a child with the main character, the ill-fated lyre-playing Orpheus.",points:4,language:"en"},
@@ -530,7 +530,28 @@ const allCards = [
   {title:"My Father",description:"Your male progenitor. Also accepted: his actual name.",points:1,language:"en"},
   {title:"Curling",description:"Every four years during the Winter Olympics the world is taken by storm with the emotions of this sport involving sliding stones. Sweep! SWEEP!",points:2,language:"en"},
   {title:"Abracadabra",description:"Word of supposedly magical properties, also a Lady Gaga song.",points:2,language:"en"},
-  {title:"Love at First Sight",description:"Phenomenon where people who have just met get infatuated with each other. See: Anna and Hans.",points:1,language:"en"}
+  {title:"Love at First Sight",description:"Phenomenon where people who have just met get infatuated with each other. See: Anna and Hans.",points:1,language:"en"},
+  {title:"(Drink) Coaster",description:"Useful artifact, usually square or round, that allows us to rest cold or hot beverages onto tables which might otherwise get stained.",points:1,language:"en"},
+  {title:"Grey Goo",description:"The hypothetical conclusion of releasing self-replicating nanobots that can feed on any material, this colorless substance being the only result.",points:3,language:"en"},
+  {title:"Dark Helmet",description:"This character, played by Rick Moranis in Mel Brooks's Spaceballs, is a parody of Darth Vader.",points:4,language:"en"},
+  {title:"Indiana Jones's Whip",description:"The loyal weapon and forever companion of the intrepid archeologist who recovered the Lost Ark and even the Holy Grail",points:2,language:"en"},
+  {title:"Brigadeiros",description:"Docinhos de leite condensado inventados pela esposa de um militar de alta patente na aeron\u00e1utica que estava concorrendo \u00e0 presid\u00eancia.",points:3,language:"br"},
+  {title:"Nakatomi Plaza",description:"Office building where, one christmas in 1988, Bruce Willis sparred with Alan Rickman.",points:4,language:"en"},
+  {title:"Bocejo",description:"Rea\u00e7\u00e3o involunt\u00e1ria feita com a boca frequentemente associado ao sono ou falta de interesse.",points:1,language:"br"},
+  {title:"A Butterfly's Pupa (or Chrysalis)",description:"Intermediary stage of development for a particular insect, this is neither a multi-legged crawler nor a beautiful flier.",points:3,language:"en"},
+  {title:"Crosswords",description:"A versatile game which can be tough for many and consists of intersecting blocks cointaining letters in a grid. It can be usually found in your daily newspaper.",points:2,language:"en"},
+  {title:"Ketchup",description:"A non-Newtonian fluid that is very well known and associated with fast food.",points:2,language:"en"},
+  {title:"Cheerios",description:"A popular brand with cereal whose name is associated with happiness",points:3,language:"en"},
+  {title:"Stay Puft (Marshmallow Man)",description:"Giant fictional character that was the final antagonist in the original Ghostbusters movie.",points:2,language:"en"},
+  {title:"Curtain",description:"A piece of fabric used for privacy. It usually hangs from the ceiling.",points:1,language:"en"},
+  {title:"The Sinking of the Titanic",description:"The 3 hours and 14 minutes it took for the 'Unsinkable' to go under.",points:3,language:"en"},
+  {title:"Incognito Mode or Private Window",description:"When you're not keen on others checking your search history, you may use this.",points:1,language:"en"},
+  {title:"Griffon",description:"This noble mythical creature is a hybrid of a lion and an eagle.",points:1,language:"en"},
+  {title:"Postscriptum (or Postscript)",description:"The written matter after the signature, often signaled by the initials of this latin term.",points:4,language:"en"},
+  {title:"Claymore",description:"Either a very heavy scottish two-handed sword or a mine that only sprays its contents in a frontal arc when detonated.",points:4,language:"en"},
+  {title:"Grumpy (the Dwarf)",description:"In the Disney versions of Snow White, among her 7 companions, he's the one with the foulest mood.",points:1,language:"en"},
+  {title:"(The Strange Case of) Dr. Jekyll and Mr. Hyde",description:"Novella by Robert Louis Stevenson depicting a scientist who gets in touch with his brutish side.",points:2,language:"en"},
+  {title:"'\"Have you turned it off and on again?\"'",description:"What tech support always asks us when we call them about our computers. The worst thing is it works everytime.",points:4,language:"en"}
 ];
 let filteredCards = [];
 let gameDeck = [];    // the full deck for the game (DECK_SIZE cards)
