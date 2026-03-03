@@ -98,6 +98,11 @@
     transform: scale(0.97);
     opacity: 0.85;
   }
+  .btn:disabled {
+    opacity: 0.35;
+    cursor: default;
+    pointer-events: none;
+  }
   .btn.secondary {
     background: transparent;
     color: var(--text-dim);
@@ -420,6 +425,11 @@
   .sticky-bottom {
     position: sticky;
     bottom: 0px;
+  }
+
+  .version {
+    opacity: 50%;
+    margin: 1em 0 1em;
   }
 </style>
 </head>
@@ -826,6 +836,9 @@ function showTurnSummary() {
   guessedCount = turnResults.filter(r => r.guessed).length;
   const leftCount = roundDeck.length;
   document.getElementById('summary-total').textContent = `${guessedCount} card${guessedCount !== 1 ? 's' : ''} guessed this turn, ${leftCount} remain`;
+  const continueBtn = document.getElementById('summary-continue-btn');
+  continueBtn.disabled = true;
+  setTimeout(() => { continueBtn.disabled = false; }, 2000);
   showScreen('summary');
 }
 
@@ -887,5 +900,8 @@ document.getElementById('confirm-quit-no').addEventListener('click', () => {
 // --- Init ---
 loadCards();
 </script>
+<div class="version">
+  <small>Version GIT_VERSION</small>
+</div>
 </body>
 </html>
