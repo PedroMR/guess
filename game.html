@@ -327,6 +327,66 @@
     font-weight: 300;
   }
 
+  /* === Card count slider === */
+  .slider-section {
+    width: 100%;
+    max-width: 300px;
+  }
+  .slider-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.6rem;
+  }
+  .slider-label-text {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .slider-value {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 1.5rem;
+    color: var(--gold);
+    line-height: 1;
+  }
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    outline: none;
+    cursor: pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--gold);
+    cursor: pointer;
+  }
+  input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--gold);
+    border: none;
+    cursor: pointer;
+  }
+  .slider-range-labels {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    opacity: 0.6;
+  }
+
   /* === Back button === */
   .btn-back {
     background: none;
@@ -367,6 +427,14 @@
 
 <!-- SETUP SCREEN -->
 <div id="setup" class="screen active">
+  <div class="slider-section">
+    <div class="slider-label">
+      <span class="slider-label-text">Number of cards</span>
+      <span class="slider-value" id="deck-size-value">45</span>
+    </div>
+    <input type="range" id="deck-size-slider" min="30" max="60" value="45" step="1">
+    <div class="slider-range-labels"><span>30</span><span>60</span></div>
+  </div>
   <h1>Guess What?</h1>
   <p>Choose which languages to include:</p>
   <label class="language-option"><input type="checkbox" value="all" id="lang-all" checked> All</label>
@@ -459,7 +527,12 @@
 
 <script>
 const TURN_DURATION = 60;
-const DECK_SIZE = 30;
+function getDeckSize() { return parseInt(document.getElementById('deck-size-slider').value); }
+
+document.getElementById('deck-size-slider').addEventListener('input', () => {
+  document.getElementById('deck-size-value').textContent = getDeckSize();
+  updateCardCount();
+});
 const ROUND_RULES = [
   'Round 1: Say anything you want &mdash; just don\'t use words from the title!',
   'Round 2: Say only ONE word &mdash; and it can\'t be from the title!',
@@ -618,8 +691,8 @@ function getFilteredCards() {
 function updateCardCount() {
   filteredCards = getFilteredCards();
   const el = document.getElementById('card-count');
-  el.textContent = `${filteredCards.length} cards available (${DECK_SIZE} will be selected)`;
-  document.getElementById('start-game-btn').disabled = filteredCards.length < DECK_SIZE;
+  el.textContent = `${filteredCards.length} cards available (${getDeckSize()} will be selected)`;
+  document.getElementById('start-game-btn').disabled = filteredCards.length < getDeckSize();
 }
 
 // --- Screen Management ---
@@ -640,8 +713,9 @@ function shuffle(arr) {
 // --- Game Start ---
 document.getElementById('start-game-btn').addEventListener('click', () => {
   filteredCards = getFilteredCards();
-  if (filteredCards.length < DECK_SIZE) return;
-  gameDeck = shuffle([...filteredCards]).slice(0, DECK_SIZE);
+  const deckSize = getDeckSize();
+  if (filteredCards.length < deckSize) return;
+  gameDeck = shuffle([...filteredCards]).slice(0, deckSize);
   round = 1;
   startRound();
 });
