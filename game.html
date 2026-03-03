@@ -526,7 +526,7 @@
 </div>
 
 <script>
-const TURN_DURATION = 60;
+const TURN_DURATION = 6;
 function getDeckSize() { return parseInt(document.getElementById('deck-size-slider').value); }
 
 document.getElementById('deck-size-slider').addEventListener('input', () => {
@@ -819,7 +819,8 @@ function showTurnSummary() {
   for (const r of turnResults) {
     const div = document.createElement('div');
     div.className = 'summary-item';
-    div.innerHTML = `<span>${r.card.title}</span><span class="${r.guessed ? 'guessed' : 'skipped'}">${r.guessed ? 'Guessed' : 'Skipped'}</span>`;
+    const points = `${r.card.points} point${r.card.points>1 ? 's':''}`;
+    div.innerHTML = `<span>${r.card.title}</span><span class="${r.guessed ? 'guessed' : 'skipped'}">${r.guessed ? points : 'Skipped'}</span>`;
     list.appendChild(div);
   }
   guessedCount = turnResults.filter(r => r.guessed).length;
