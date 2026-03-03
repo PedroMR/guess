@@ -427,6 +427,7 @@
 
 <!-- SETUP SCREEN -->
 <div id="setup" class="screen active">
+  <h1>Guess What?</h1>
   <div class="slider-section">
     <div class="slider-label">
       <span class="slider-label-text">Number of cards</span>
@@ -435,7 +436,6 @@
     <input type="range" id="deck-size-slider" min="30" max="60" value="45" step="1">
     <div class="slider-range-labels"><span>30</span><span>60</span></div>
   </div>
-  <h1>Guess What?</h1>
   <p>Choose which languages to include:</p>
   <label class="language-option"><input type="checkbox" value="all" id="lang-all" checked> All</label>
   <label class="language-option"><input type="checkbox" value="en" id="lang-en"> English</label>
@@ -558,7 +558,7 @@ const allCards = [
   {title:"Metamorphosis",description:"Tale by author Franz Kafka that starts when Gregor Samsa finds himself turned into a monstrous insect.",points:2,language:"en"},
   {title:"Final Fantasy",description:"Series of videogames created in Japan which became famous as one of the most recognized JRPG brands ever. They usually hinge around crystals, Chocobos, and feature a mechanic named Cid.",points:1,language:"en"},
   {title:"Origami",description:"Japanese art of folding paper to create interesting effects. Its most famous creation is undoubtedly the crane.",points:1,language:"en"},
-  {title:"iPhone Charger",description:"This contraption used to have a lightning connector but changed to USB-C; it's important for powering your mobile device but is never around when we need one.",points:1,language:"en"},
+  {title:"Phone Charger",description:"This contraption is important for powering your mobile device but is never around when we need one. The Apple one used to have a lightning connector but changed to USB-C.",points:1,language:"en"},
   {title:"Minotaur",description:"Conceived by Queen Pasiphae and a bull, King Minos hid this mythical monster in a maze constructed by Daedalus until it was defeated by Theseus.",points:1,language:"en"},
   {title:"Do Not Disturb Sign",description:"Hanged outside a hotel door it asks cleaning staff to not knock and come back later.",points:1,language:"en"},
   {title:"Fish Extender",description:"Consisting of pockets hanging beside a door, it asks other passengers in the Disney Cruise to leave small gifts and souvenirs inside.",points:3,language:"en"},
@@ -645,7 +645,12 @@ const allCards = [
   {title:"Coven",description:"A group of witches or wizards who work together and protect each other.",points:2,language:"en"},
   {title:"Rosie the Riveter",description:"The female propaganda character used during World War II in the US to celebrate the women who worked in factories, she said \"We can do it!\" in posters wearing her iconic red handkerchief with white dots on her head.",points:3,language:"en"},
   {title:"Kelvin",description:"Temperature scale that actually starts at absolute zero and is used by astronomers, physicists, and the like.",points:2,language:"en"},
-  {title:"Charades",description:"Game where one person is trying to communicate a concept to others just by using physical gestures and no words.",points:2,language:"en"}
+  {title:"Charades",description:"Game where one person is trying to communicate a concept to others just by using physical gestures and no words.",points:1,language:"en"},
+  {title:"Loki",description:"Norse god of trickery, brother of Thor, child of giants, adopted by Odin. In the MARVEL universe characterized by his golden helmet and green cloak.",points:1,language:"en"},
+  {title:"J. Jonah Jameson",description:"Editor of the Daily Bugle and proclaimed hater no. 1 of Spider-Man, always thinks the \"Masked Menace\" is up to no good.",points:1,language:"en"},
+  {title:"Slinky",description:"A weird-looking metal or plastic coil, this toy that can walk down steps was first introduced in 1945 and has sold over 300 million units.",points:1,language:"en"},
+  {title:"Scratch (Programming System)",description:"This graphical software was created at MIT and enables kids around the world to code their own simple games.",points:2,language:"en"},
+  {title:"Box Fart",description:"The annoying sound a game board container will sometimes make when the lid is pushed down over the lower part. It sounds like a human passing gas.",points:2,language:"en"}
 ];
 let filteredCards = [];
 let gameDeck = [];    // the full deck for the game (DECK_SIZE cards)
@@ -818,7 +823,8 @@ function showTurnSummary() {
     list.appendChild(div);
   }
   guessedCount = turnResults.filter(r => r.guessed).length;
-  document.getElementById('summary-total').textContent = `${guessedCount} card${guessedCount !== 1 ? 's' : ''} guessed this turn`;
+  const leftCount = roundDeck.length;
+  document.getElementById('summary-total').textContent = `${guessedCount} card${guessedCount !== 1 ? 's' : ''} guessed this turn, ${leftCount} remain`;
   showScreen('summary');
 }
 
