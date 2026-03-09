@@ -431,6 +431,128 @@
     opacity: 50%;
     margin: 1em 0 1em;
   }
+
+  /* === Mode toggle & team config === */
+  .mode-toggle {
+    display: flex;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 300px;
+  }
+  .mode-btn {
+    flex: 1;
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    padding: 0.55rem 1rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.03em;
+  }
+  .mode-btn.active {
+    background: var(--gold);
+    color: var(--bg);
+    border-color: var(--gold);
+    font-weight: 700;
+  }
+  .team-config {
+    width: 100%;
+    max-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  .team-count-row {
+    display: flex;
+    gap: 0.5rem;
+  }
+  .team-count-btn {
+    flex: 1;
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    padding: 0.45rem 0;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .team-count-btn.active {
+    background: var(--gold);
+    color: var(--bg);
+    border-color: var(--gold);
+    font-weight: 700;
+  }
+  .team-name-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 300;
+    padding: 0.5rem 0.2rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .team-name-input:focus {
+    border-bottom-color: var(--gold);
+  }
+  .team-config-label {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* === Summary team score === */
+  #summary-team-score {
+    font-size: 0.9rem;
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  /* === Game over scoreboard === */
+  #gameover-scores {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+  }
+  .scoreboard-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.65rem 1rem;
+    border-radius: 6px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: 0.95rem;
+    font-weight: 300;
+  }
+  .scoreboard-row.winner {
+    border-color: var(--gold);
+    background: var(--gold-glow);
+    color: var(--gold);
+    font-weight: 700;
+  }
+  .scoreboard-row .score-pts {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: 1.2rem;
+    color: var(--gold);
+  }
+  .scoreboard-row.winner .score-pts {
+    color: var(--gold);
+  }
 </style>
 </head>
 <body>
@@ -438,6 +560,22 @@
 <!-- SETUP SCREEN -->
 <div id="setup" class="screen active">
   <h1>Guess What?</h1>
+
+  <div class="mode-toggle">
+    <button class="mode-btn active" id="mode-coop-btn">Co-op</button>
+    <button class="mode-btn" id="mode-team-btn">Team</button>
+  </div>
+
+  <div id="team-config" class="team-config" style="display:none;">
+    <span class="team-config-label">Number of teams</span>
+    <div class="team-count-row">
+      <button class="team-count-btn active" data-count="2">2</button>
+      <button class="team-count-btn" data-count="3">3</button>
+      <button class="team-count-btn" data-count="4">4</button>
+    </div>
+    <div id="team-name-inputs"></div>
+  </div>
+
   <div class="slider-section">
     <div class="slider-label">
       <span class="slider-label-text">Number of cards</span>
@@ -464,7 +602,7 @@
     <div class="book-closed-frame"></div>
     <div class="book-closed-round" id="ready-round"></div>
     <div class="book-closed-divider"></div>
-    <div class="book-closed-title">Ready for<br>Next Turn!</div>
+    <div class="book-closed-title" id="ready-title">Ready for<br>Next Turn!</div>
     <div class="book-closed-divider"></div>
     <div class="book-closed-subtitle" id="ready-rule"></div>
     <div class="book-closed-divider"></div>
@@ -477,7 +615,10 @@
 <!-- PLAY SCREEN -->
 <div id="play" class="screen">
   <div style="display:flex;justify-content:space-between;align-items:center;width:100%;">
-    <span class="round-badge" id="play-round"></span>
+    <div style="display:flex;gap:0.5rem;align-items:center;">
+      <span class="round-badge" id="play-round"></span>
+      <span class="round-badge" id="play-team" style="display:none;"></span>
+    </div>
     <span class="timer" id="timer">60</span>
   </div>
   <!--div class="round-rule" id="play-rule" style="font-size:0.85rem;padding:0.5rem 0.8rem;"></div-->
@@ -503,9 +644,10 @@
 
 <!-- TURN SUMMARY SCREEN -->
 <div id="summary" class="screen">
-  <h2>Turn Over!</h2>
+  <h2 id="summary-heading">Turn Over!</h2>
   <div id="summary-list" style="width:100%;"></div>
   <p id="summary-total" style="font-size:1.2rem;font-weight:bold;"></p>
+  <p id="summary-team-score" style="display:none;"></p>
   <button class="btn sticky-bottom" id="summary-continue-btn">Continue</button>
 </div>
 
@@ -531,12 +673,13 @@
 <!-- GAME OVER SCREEN -->
 <div id="gameover" class="screen">
   <h1>Game Over!</h1>
-  <p>You guessed all the cards across all 3 rounds!</p>
+  <p id="gameover-subtitle">You guessed all the cards across all 3 rounds!</p>
+  <div id="gameover-scores"></div>
   <button class="btn" id="play-again-btn">Play Again</button>
 </div>
 
 <script>
-const TURN_DURATION = 60;
+const TURN_DURATION = 10;
 function getDeckSize() { return parseInt(document.getElementById('deck-size-slider').value); }
 
 document.getElementById('deck-size-slider').addEventListener('input', () => {
@@ -670,10 +813,56 @@ let round = 1;
 let timerInterval = null;
 let timeLeft = 0;
 let turnResults = []; // {card, guessed}
+let gameMode = 'coop';   // 'coop' | 'team'
+let teams = [];          // [{name, score}, ...]
+let currentTeamIndex = 0;
 
 function loadCards() {
   updateCardCount();
 }
+
+// --- Mode Toggle ---
+let selectedTeamCount = 2;
+
+function renderTeamNameInputs(count) {
+  const container = document.getElementById('team-name-inputs');
+  container.innerHTML = '';
+  for (let i = 1; i <= count; i++) {
+    const existing = container.querySelector(`[data-team="${i}"]`);
+    const val = existing ? existing.value : `Team ${i}`;
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'team-name-input';
+    input.placeholder = `Team ${i}`;
+    input.value = val;
+    input.dataset.team = i;
+    container.appendChild(input);
+  }
+}
+
+document.getElementById('mode-coop-btn').addEventListener('click', () => {
+  gameMode = 'coop';
+  document.getElementById('mode-coop-btn').classList.add('active');
+  document.getElementById('mode-team-btn').classList.remove('active');
+  document.getElementById('team-config').style.display = 'none';
+});
+
+document.getElementById('mode-team-btn').addEventListener('click', () => {
+  gameMode = 'team';
+  document.getElementById('mode-team-btn').classList.add('active');
+  document.getElementById('mode-coop-btn').classList.remove('active');
+  document.getElementById('team-config').style.display = '';
+  renderTeamNameInputs(selectedTeamCount);
+});
+
+document.querySelectorAll('.team-count-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    selectedTeamCount = parseInt(btn.dataset.count);
+    document.querySelectorAll('.team-count-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderTeamNameInputs(selectedTeamCount);
+  });
+});
 
 // --- Language Selection ---
 const langAll = document.getElementById('lang-all');
@@ -732,6 +921,13 @@ document.getElementById('start-game-btn').addEventListener('click', () => {
   if (filteredCards.length < deckSize) return;
   gameDeck = shuffle([...filteredCards]).slice(0, deckSize);
   round = 1;
+  currentTeamIndex = 0;
+  if (gameMode === 'team') {
+    const inputs = document.querySelectorAll('#team-name-inputs .team-name-input');
+    teams = Array.from(inputs).map(inp => ({ name: inp.value.trim() || inp.placeholder, score: 0 }));
+  } else {
+    teams = [];
+  }
   startRound();
 });
 
@@ -742,6 +938,12 @@ function startRound() {
 
 function showReadyScreen() {
   document.getElementById('ready-round').textContent = `Round ${round} of 3`;
+  if (gameMode === 'team') {
+    const teamName = teams[currentTeamIndex].name;
+    document.getElementById('ready-title').innerHTML = `${teamName}'s<br>Turn!`;
+  } else {
+    document.getElementById('ready-title').innerHTML = 'Ready for<br>Next Turn!';
+  }
   document.getElementById('ready-rule').innerHTML = ROUND_RULES[round - 1];
   document.getElementById('ready-deck-info').textContent =
     `${roundDeck.length} of ${gameDeck.length} cards remaining in deck`;
@@ -756,6 +958,13 @@ function startTurn() {
   timeLeft = TURN_DURATION;
   showScreen('play');
   document.getElementById('play-round').textContent = `Round ${round}`;
+  const playTeamEl = document.getElementById('play-team');
+  if (gameMode === 'team') {
+    playTeamEl.textContent = teams[currentTeamIndex].name;
+    playTeamEl.style.display = '';
+  } else {
+    playTeamEl.style.display = 'none';
+  }
   if (document.getElementById('play-rule'))
     document.getElementById('play-rule').innerHTML = ROUND_RULES[round - 1];
   updateTimer();
@@ -826,16 +1035,30 @@ function showTurnSummary() {
   const list = document.getElementById('summary-list');
   list.innerHTML = '';
   let guessedCount = 0;
+  let pointsEarned = 0;
   for (const r of turnResults) {
     const div = document.createElement('div');
     div.className = 'summary-item';
     const points = `${r.card.points} point${r.card.points>1 ? 's':''}`;
     div.innerHTML = `<span>${r.card.title}</span><span class="${r.guessed ? 'guessed' : 'skipped'}">${r.guessed ? points : 'Skipped'}</span>`;
     list.appendChild(div);
+    if (r.guessed) { guessedCount++; pointsEarned += r.card.points; }
   }
-  guessedCount = turnResults.filter(r => r.guessed).length;
   const leftCount = roundDeck.length;
   document.getElementById('summary-total').textContent = `${guessedCount} card${guessedCount !== 1 ? 's' : ''} guessed this turn, ${leftCount} remain`;
+
+  const teamScoreEl = document.getElementById('summary-team-score');
+  const headingEl = document.getElementById('summary-heading');
+  if (gameMode === 'team') {
+    teams[currentTeamIndex].score += pointsEarned;
+    headingEl.textContent = `${teams[currentTeamIndex].name}'s Turn Over!`;
+    teamScoreEl.textContent = `${teams[currentTeamIndex].name}: ${teams[currentTeamIndex].score} points total`;
+    teamScoreEl.style.display = '';
+  } else {
+    headingEl.textContent = 'Turn Over!';
+    teamScoreEl.style.display = 'none';
+  }
+
   const continueBtn = document.getElementById('summary-continue-btn');
   continueBtn.disabled = true;
   setTimeout(() => { continueBtn.disabled = false; }, 2000);
@@ -844,17 +1067,48 @@ function showTurnSummary() {
 
 document.getElementById('summary-continue-btn').addEventListener('click', () => {
   if (roundDeck.length === 0) {
-    // Round complete
     if (round >= 3) {
-      showScreen('gameover');
+      showGameOver();
     } else {
       round++;
+      currentTeamIndex = 0;
       startRound();
     }
   } else {
+    if (gameMode === 'team') {
+      currentTeamIndex = (currentTeamIndex + 1) % teams.length;
+    }
     showReadyScreen();
   }
 });
+
+function showGameOver() {
+  const scoresEl = document.getElementById('gameover-scores');
+  const subtitleEl = document.getElementById('gameover-subtitle');
+  scoresEl.innerHTML = '';
+  if (gameMode === 'team') {
+    subtitleEl.textContent = 'Final scores:';
+    const sorted = [...teams].sort((a, b) => b.score - a.score);
+    const topScore = sorted[0].score;
+    const isTie = sorted.filter(t => t.score === topScore).length > 1;
+    sorted.forEach(team => {
+      const row = document.createElement('div');
+      row.className = 'scoreboard-row' + (team.score === topScore ? ' winner' : '');
+      row.innerHTML = `<span>${team.score === topScore && !isTie ? '🏆 ' : ''}${team.name}</span><span class="score-pts">${team.score} pts</span>`;
+      scoresEl.appendChild(row);
+    });
+    if (isTie) {
+      const tieEl = document.createElement('p');
+      tieEl.style.color = 'var(--gold)';
+      tieEl.style.fontWeight = '500';
+      tieEl.textContent = "It's a tie!";
+      scoresEl.appendChild(tieEl);
+    }
+  } else {
+    subtitleEl.textContent = 'You guessed all the cards across all 3 rounds!';
+  }
+  showScreen('gameover');
+}
 
 // --- Play Again ---
 document.getElementById('play-again-btn').addEventListener('click', () => {
