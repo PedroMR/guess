@@ -587,7 +587,7 @@
   <p>Choose which languages to include:</p>
   <label class="language-option"><input type="checkbox" value="all" id="lang-all" checked> All</label>
   <label class="language-option"><input type="checkbox" value="en" id="lang-en"> English</label>
-  <label class="language-option"><input type="checkbox" value="br" id="lang-br"> Brazilian Portuguese</label>
+  <label class="language-option"><input type="checkbox" value="dm" id="lang-dm"> Família Dart-Miller</label>
   <p id="card-count" class="deck-info"></p>
   <button class="btn" id="start-game-btn">Start Game</button>
 </div>
@@ -694,16 +694,16 @@ const ROUND_RULES = [
 
 const allCards = [
   {title:"King Lear",description:"Shakesperean regent who divides his kingdom across his daughters Goneril, Regan, and Cordelia.",points:1,language:"en"},
-  {title:"Narizinho",description:"Personagem principal nas hist\u00f3rias de Monteiro Lobato sobre o S\u00edtio do Picapau-Amarelo, \u00e9 peralta e tem seu nome vindo de parte de sua anatomia que \u00e9 famosa por ser arrebitada.",points:2,language:"br"},
+  {title:"Narizinho",description:"Personagem principal nas hist\u00f3rias de Monteiro Lobato sobre o S\u00edtio do Picapau-Amarelo, \u00e9 peralta e tem seu nome vindo de parte de sua anatomia que \u00e9 famosa por ser arrebitada.",points:2,language:"dm"},
   {title:"E.T.",description:"Movie named after its main character which is an alien that gets lost on Earth and is helped by a number of children including one played by Reese Whiterspoon. He heals Elliot with his finger and they fly in their bycicles.",points:1,language:"en"},
   {title:"Percy Jackson",description:"Main character in a book where he is accused of stealing Zeus's lightning. He then goes on a road trip to try to prove his innocence and save his mother.",points:1,language:"en"},
   {title:"Calliope",description:"One of the greek muses. In Neil Gaiman's Sandman stories she has a child with the main character, the ill-fated lyre-playing Orpheus.",points:3,language:"en"},
-  {title:"Moloko",description:"Esta palavra significa 'leite' em Russo, \u00e9 o nome de uma banda que o papai gosta, e descreve drogas no livro 'Laranja Mec\u00e2nica' de Alexander Burguess.",points:3,language:"br"},
+  {title:"Moloko",description:"Esta palavra significa 'leite' em Russo, \u00e9 o nome de uma banda que o papai gosta, e descreve drogas no livro 'Laranja Mec\u00e2nica' de Alexander Burguess.",points:3,language:"dm"},
   {title:"Ted Danson",description:"Tall actor who played characters in Cheers, A Good Place and Man on the Inside.",points:2,language:"en"},
   {title:"Marie Antoinette",description:"A French aristocrat known for her elaborate silk gowns and even taller hair-dos who famously said 'Let them eat cake' when asked 'the people have no bread to eat.'",points:2,language:"en"},
-  {title:"Noite Estrelada",description:"Obra famosa por suas grossas pinceladas de Vincent Van Gogh representando o que via nos c\u00e9us.",points:1,language:"br"},
-  {title:"Mona Lisa",description:"O quadro mais famoso do mundo, tamb\u00e9m conhecido como La Gioconda, pintado por Leonardo DaVinci. Atualmente exposta no Louvre, em Paris.",points:1,language:"br"},
-  {title:"Marion",description:"Caso rom\u00e2ntico mais famosa do arque\u00f3logo Indiana Jones, ela consegue segurar sua bebida e disparou as metralhadoras de um avi\u00e3o em que ficou presa.",points:2,language:"br"},
+  {title:"Noite Estrelada",description:"Obra famosa por suas grossas pinceladas de Vincent Van Gogh representando o que via nos c\u00e9us.",points:1,language:"dm"},
+  {title:"Mona Lisa",description:"O quadro mais famoso do mundo, tamb\u00e9m conhecido como La Gioconda, pintado por Leonardo DaVinci. Atualmente exposta no Louvre, em Paris.",points:1,language:"dm"},
+  {title:"Marion",description:"Caso rom\u00e2ntico mais famosa do arque\u00f3logo Indiana Jones, ela consegue segurar sua bebida e disparou as metralhadoras de um avi\u00e3o em que ficou presa.",points:2,language:"dm"},
   {title:"Sonic the Hedgehog",description:"Blue rodent who can run really fast in his videogames, his film became famous for its weird presentation of his teeth.",points:2,language:"en"},
   {title:"Double Rainbow",description:"Meme famous after the person filming this video captured two of an optical effect in the sky and couldn't stop saying this phrase. What does it mean?",points:1,language:"en"},
   {title:"Weird Al Yankovic",description:"Singer/songwriter famous for writing parody versions of famous songs, including such hits as 'Like a Surgeon' and 'Amish Paradise'. A polka lover!",points:1,language:"en"},
@@ -723,13 +723,13 @@ const allCards = [
   {title:"Palantir",description:"This orb was used by Sauron to communicate with his servants, including Saruman, who lost his sphere when Gr\u00edma threw it down from Orthanc.",points:2,language:"en"},
   {title:"Milk Teeth",description:"Kids use these to chew their food, even if they are bound to lose them later when the new adult ones come in",points:1,language:"en"},
   {title:"Calvin's Stuffed Tiger (Hobbes)",description:"The favoured pet and eternal best friend of an elementary-level menace who was portrayed in the famous comic strips with both their names, along with Susie, Mom and Dad.",points:2,language:"en"},
-  {title:"Sa\u00fade!",description:"O que a gente diz quando algu\u00e9m espirra, originalmente desejando que sua alma n\u00e3o saia do seu corpo com o espirro.",points:1,language:"br"},
-  {title:"As Tr\u00eas Leis da Rob\u00f3tica",description:"Criadas por Isaac Asimov, estas regras governam o comportamento dos rob\u00f4s.",points:1,language:"br"},
+  {title:"Sa\u00fade!",description:"O que a gente diz quando algu\u00e9m espirra, originalmente desejando que sua alma n\u00e3o saia do seu corpo com o espirro.",points:1,language:"dm"},
+  {title:"As Tr\u00eas Leis da Rob\u00f3tica",description:"Criadas por Isaac Asimov, estas regras governam o comportamento dos rob\u00f4s.",points:1,language:"dm"},
   {title:"(Pie) \u00e0 la Mode",description:"French expression for a wonderful combination of two desserts, this literally means a fashionable dessert.",points:1,language:"en"},
-  {title:"Golf",description:"Chamado de esporte por alguns, esta atividade concentra-se ao redor de bater forte numa bolinha com um taco.",points:1,language:"br"},
+  {title:"Golf",description:"Chamado de esporte por alguns, esta atividade concentra-se ao redor de bater forte numa bolinha com um taco.",points:1,language:"dm"},
   {title:"Mammal",description:"An animal with fur that doesn't lay eggs. Their name comes from the act of suckling an infant in one's teats.",points:1,language:"en"},
   {title:"Darth-Maul's Lightsaber",description:"An elegant weapon for a more civilized age, this double-sided blade was wielded by a red and black Zabrak that followed the Sith.",points:2,language:"en"},
-  {title:"\u00c1lbum de Fotos de Viagem",description:"Uma cole\u00e7\u00e3o de imagens capturadas por um telefone ou c\u00e2mera arrumadas em um livro mostrando os trejeitos e trajetos das pessoas que passaram tempo juntas em um outro lugar.",points:2,language:"br"},
+  {title:"\u00c1lbum de Fotos de Viagem",description:"Uma cole\u00e7\u00e3o de imagens capturadas por um telefone ou c\u00e2mera arrumadas em um livro mostrando os trejeitos e trajetos das pessoas que passaram tempo juntas em um outro lugar.",points:2,language:"dm"},
   {title:"Link's Master Sword",description:"Famous weapon wielded by a green-clad hero that strives to save Princess Zelda from various evils in a series of video-games by Nintendo.",points:2,language:"en"},
   {title:"An HDMI Cable",description:"Connector used to plug a monitor into a computer, or a home theater to a TV set. Supports the copyright protection protocol HDCP.",points:1,language:"en"},
   {title:"That Loving Feeling",description:"Thing you've lost, according to the 1964 song by The Righteous Brothers, performed by Tom Cruise in Top Gun.",points:3,language:"en"},
@@ -738,16 +738,16 @@ const allCards = [
   {title:"Brandon Sanderson",description:"Famous author of the Stormlight Archive and Mistborn, among others, his works often thread the line between Sci-Fi and Fantasy.",points:2,language:"en"},
   {title:"Bird of Prey",description:"Type of winged creature that eats live meat, and also the name of the most famous Klingon warships.",points:1,language:"en"},
   {title:"Pesach",description:"Famous Jewish holiday that commemorates the exit of the Hebrews from Egypt. Its name comes from the passing of death over the doors that belonged to the slaves.",points:2,language:"en"},
-  {title:"LNG (Liquid Natural Gas)",description:"Sigla representando a principal commodity que a mam\u00e3e cobre em seu trabalho (mas n\u00e3o a \u00fanica).",points:2,language:"br"},
-  {title:"Samurai Siege",description:"Primeiro jogo de sucesso da Space Ape Games, trazendo uma est\u00e9tica japonesa para o g\u00eanero de 'constr\u00f3i e ataca' popularizado por Clash of Clans.",points:2,language:"br"},
-  {title:"Hashi Sushi",description:"O melhor restaurante japon\u00eas de New Canaan, seu nome vem dos palitos usados para comer os t\u00edpicos pratos japoneses.",points:1,language:"br"},
-  {title:"Cosmic Rewind",description:"Concorrente \u00e0 melhor montanha-russa na DisneyWorld, apresenta os Guardi\u00f5es da Gal\u00e1xia em uma batalha temporal contra um vil\u00e3o das estrelas.",points:2,language:"br"},
+  {title:"LNG (Liquid Natural Gas)",description:"Sigla representando a principal commodity que a mam\u00e3e cobre em seu trabalho (mas n\u00e3o a \u00fanica).",points:2,language:"dm"},
+  {title:"Samurai Siege",description:"Primeiro jogo de sucesso da Space Ape Games, trazendo uma est\u00e9tica japonesa para o g\u00eanero de 'constr\u00f3i e ataca' popularizado por Clash of Clans.",points:2,language:"dm"},
+  {title:"Hashi Sushi",description:"O melhor restaurante japon\u00eas de New Canaan, seu nome vem dos palitos usados para comer os t\u00edpicos pratos japoneses.",points:1,language:"dm"},
+  {title:"Cosmic Rewind",description:"Concorrente \u00e0 melhor montanha-russa na DisneyWorld, apresenta os Guardi\u00f5es da Gal\u00e1xia em uma batalha temporal contra um vil\u00e3o das estrelas.",points:2,language:"dm"},
   {title:"Michael Jackson's Glove",description:"Sparkling hand accessory worn by the major pop-star behind hits such as Thriller, Beat It and Billie Jean.",points:2,language:"en"},
   {title:"Bill Cipher",description:"Equilateral psycokinetic dream demon, the antagonist of the 2010s show 'Gravity Falls', voiced by Alex Hirsch.",points:2,language:"en"},
   {title:"Synchronized Swimming",description:"Sport where teammembers perform hydroginastics trying to keep the rhythm with everyone else.",points:1,language:"en"},
   {title:"Carcassone",description:"A mountainous region in southern France, and also a popular tile-placing boardgame that originated the term 'meeples'.",points:3,language:"en"},
   {title:"Slay the Spire",description:"Popular indie deckbuilding videogame that has the player fighting avian Cultists as they ascend a terrible tower.",points:3,language:"en"},
-  {title:"Chico Buarque",description:"Popular cantor brasileiro famoso por m\u00fasicas contra a ditadura como Meu Caro Amigo e Apesar de Voc\u00ea.",points:1,language:"br"},
+  {title:"Chico Buarque",description:"Popular cantor brasileiro famoso por m\u00fasicas contra a ditadura como Meu Caro Amigo e Apesar de Voc\u00ea.",points:1,language:"dm"},
   {title:"Millenium Falcon",description:"I'll have you know, this ship managed the Kessel Run in under 12 parsecs! Just ask Han or Chewie.",points:1,language:"en"},
   {title:"Big Bad Wolf",description:"Antagonist to both Little Red Riding Hood and the Three Little Pigs, he keeps himself busy in the forest.",points:1,language:"en"},
   {title:"Dragons",description:"These creatures exist in multiple folklores, taking the form of giant reptiles who can fly and often breathe fire or other elements.",points:1,language:"en"},
@@ -761,9 +761,9 @@ const allCards = [
   {title:"Grey Goo",description:"The hypothetical conclusion of releasing self-replicating nanobots that can feed on any material, this colorless substance being the only result.",points:2,language:"en"},
   {title:"Dark Helmet",description:"This character, played by Rick Moranis in Mel Brooks's Spaceballs, is a parody of Darth Vader.",points:3,language:"en"},
   {title:"Indiana Jones's Whip",description:"The loyal weapon and forever companion of the intrepid archeologist who recovered the Lost Ark and even the Holy Grail",points:1,language:"en"},
-  {title:"Brigadeiros",description:"Docinhos de leite condensado inventados pela esposa de um militar de alta patente na aeron\u00e1utica que estava concorrendo \u00e0 presid\u00eancia.",points:2,language:"br"},
+  {title:"Brigadeiros",description:"Docinhos de leite condensado inventados pela esposa de um militar de alta patente na aeron\u00e1utica que estava concorrendo \u00e0 presid\u00eancia.",points:2,language:"dm"},
   {title:"Nakatomi Plaza",description:"Office building where, one christmas in 1988, Bruce Willis sparred with Alan Rickman.",points:3,language:"en"},
-  {title:"Bocejo",description:"Rea\u00e7\u00e3o involunt\u00e1ria feita com a boca frequentemente associado ao sono ou falta de interesse.",points:1,language:"br"},
+  {title:"Bocejo",description:"Rea\u00e7\u00e3o involunt\u00e1ria feita com a boca frequentemente associado ao sono ou falta de interesse.",points:1,language:"dm"},
   {title:"A Butterfly's Pupa (or Chrysalis)",description:"Intermediary stage of development for a particular insect, this is neither a multi-legged crawler nor a beautiful flier.",points:2,language:"en"},
   {title:"Crosswords",description:"A versatile game which can be tough for many and consists of intersecting blocks cointaining letters in a grid. It can be usually found in your daily newspaper.",points:1,language:"en"},
   {title:"Ketchup",description:"A non-Newtonian fluid that is very well known and associated with fast food.",points:1,language:"en"},
@@ -781,7 +781,7 @@ const allCards = [
   {title:"Power 10",description:"A command called by coxswains, bowmen or coaches to have the rowers add a burst of power to their next ten strokes, this is usually ordered only during a warm-up, at the start of a race, or when the boat is neck-and-neck with an opponent.",points:3,language:"en"},
   {title:"Starboard",description:"If you\u2019re standing in the aft facing fore, it\u2019s the side of the ship to your right.",points:1,language:"en"},
   {title:"3 Pointer",description:"Also known as \u201cfrom downtown\u201d, this is a basketball shot made from the other side of a specific line.",points:1,language:"en"},
-  {title:"O Cabelo do Papai",description:"Endiabrado e indom\u00e1vel, esta juba \u00e9 raramente tosada e em geral se estica para os lados da cabe\u00e7a deste membro da fam\u00edlia.",points:2,language:"br"},
+  {title:"O Cabelo do Papai",description:"Endiabrado e indom\u00e1vel, esta juba \u00e9 raramente tosada e em geral se estica para os lados da cabe\u00e7a deste membro da fam\u00edlia.",points:2,language:"dm"},
   {title:"Cubitos",description:"This boardgame represents a race among weird cube-shaped animals, implementing a form of bag building and featuring copious amounts of dice chucking.",points:3,language:"en"},
   {title:"Smurfs",description:"Little blue humanoid creatures originally created as a Belgian comic in 1958 and later found success as cartoons and even a live-action movie with Neil Patrick Harris.",points:1,language:"en"},
   {title:"Claude",description:"Strange but incredibly useful, this AI agent coded most -- if not all -- of this game.",points:2,language:"en"},
@@ -867,20 +867,20 @@ document.querySelectorAll('.team-count-btn').forEach(btn => {
 // --- Language Selection ---
 const langAll = document.getElementById('lang-all');
 const langEn = document.getElementById('lang-en');
-const langBr = document.getElementById('lang-br');
+const langDm = document.getElementById('lang-dm');
 
 langAll.addEventListener('change', () => {
-  if (langAll.checked) { langEn.checked = false; langBr.checked = false; }
+  if (langAll.checked) { langEn.checked = false; langDm.checked = false; }
   updateCardCount();
 });
 langEn.addEventListener('change', () => {
-  if (langEn.checked || langBr.checked) langAll.checked = false;
-  if (!langEn.checked && !langBr.checked) langAll.checked = true;
+  if (langEn.checked || langDm.checked) langAll.checked = false;
+  if (!langEn.checked && !langDm.checked) langAll.checked = true;
   updateCardCount();
 });
-langBr.addEventListener('change', () => {
-  if (langEn.checked || langBr.checked) langAll.checked = false;
-  if (!langEn.checked && !langBr.checked) langAll.checked = true;
+langDm.addEventListener('change', () => {
+  if (langEn.checked || langDm.checked) langAll.checked = false;
+  if (!langEn.checked && !langDm.checked) langAll.checked = true;
   updateCardCount();
 });
 
@@ -888,7 +888,7 @@ function getFilteredCards() {
   if (langAll.checked) return [...allCards];
   const langs = [];
   if (langEn.checked) langs.push('en');
-  if (langBr.checked) langs.push('br');
+  if (langDm.checked) langs.push('dm');
   return allCards.filter(c => langs.includes(c.language));
 }
 
