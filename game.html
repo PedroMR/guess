@@ -325,6 +325,13 @@
     font-weight: 500;
   }
   .summary-item .skipped { color: var(--text-dim); }
+  .summary-item .result-toggle {
+    cursor: pointer;
+    user-select: none;
+    border-bottom: 1px dashed transparent;
+    transition: border-color 0.15s;
+  }
+  .summary-item .result-toggle:hover { border-bottom-color: currentColor; }
 
   .deck-info {
     color: var(--text-dim);
@@ -1031,33 +1038,56 @@ function endTurn() {
 }
 
 // --- Turn Summary ---
-function showTurnSummary() {
-  const list = document.getElementById('summary-list');
-  list.innerHTML = '';
-  let guessedCount = 0;
-  let pointsEarned = 0;
+function updateSummaryTotals() {
+  let guessedCount = 0, pointsEarned = 0;
   for (const r of turnResults) {
-    const div = document.createElement('div');
-    div.className = 'summary-item';
-    const points = `${r.card.points} point${r.card.points>1 ? 's':''}`;
-    div.innerHTML = `<span>${r.card.title}</span><span class="${r.guessed ? 'guessed' : 'skipped'}">${r.guessed ? points : 'Skipped'}</span>`;
-    list.appendChild(div);
     if (r.guessed) { guessedCount++; pointsEarned += r.card.points; }
   }
   const leftCount = roundDeck.length;
-  document.getElementById('summary-total').textContent = `${guessedCount} card${guessedCount !== 1 ? 's' : ''} guessed this turn, ${leftCount} remain`;
-
+  document.getElementById('summary-total').textContent =
+    `${guessedCount} card${guessedCount !== 1 ? 's' : ''} guessed this turn, ${leftCount} remain`;
   const teamScoreEl = document.getElementById('summary-team-score');
-  const headingEl = document.getElementById('summary-heading');
   if (gameMode === 'team') {
-    teams[currentTeamIndex].score += pointsEarned;
+    const projected = teams[currentTeamIndex].score + pointsEarned;
+    teamScoreEl.textContent = `${teams[currentTeamIndex].name}: ${projected} points total`;
+  }
+}
+
+function showTurnSummary() {
+  const list = document.getElementById('summary-list');
+  list.innerHTML = '';
+
+  for (const r of turnResults) {
+    const div = document.createElement('div');
+    div.className = 'summary-item';
+    const pointsText = `${r.card.points} point${r.card.points>1 ? 's':''}`;
+    const badge = document.createElement('span');
+    badge.className = `result-toggle ${r.guessed ? 'guessed' : 'skipped'}`;
+    badge.textContent = r.guessed ? pointsText : 'Skipped';
+    badge.addEventListener('click', () => {
+      r.guessed = !r.guessed;
+      badge.className = `result-toggle ${r.guessed ? 'guessed' : 'skipped'}`;
+      badge.textContent = r.guessed ? pointsText : 'Skipped';
+      updateSummaryTotals();
+    });
+    const title = document.createElement('span');
+    title.textContent = r.card.title;
+    div.appendChild(title);
+    div.appendChild(badge);
+    list.appendChild(div);
+  }
+
+  const headingEl = document.getElementById('summary-heading');
+  const teamScoreEl = document.getElementById('summary-team-score');
+  if (gameMode === 'team') {
     headingEl.textContent = `${teams[currentTeamIndex].name}'s Turn Over!`;
-    teamScoreEl.textContent = `${teams[currentTeamIndex].name}: ${teams[currentTeamIndex].score} points total`;
     teamScoreEl.style.display = '';
   } else {
     headingEl.textContent = 'Turn Over!';
     teamScoreEl.style.display = 'none';
   }
+
+  updateSummaryTotals();
 
   const continueBtn = document.getElementById('summary-continue-btn');
   continueBtn.disabled = true;
@@ -1066,6 +1096,10 @@ function showTurnSummary() {
 }
 
 document.getElementById('summary-continue-btn').addEventListener('click', () => {
+  if (gameMode === 'team') {
+    const pointsEarned = turnResults.filter(r => r.guessed).reduce((s, r) => s + r.card.points, 0);
+    teams[currentTeamIndex].score += pointsEarned;
+  }
   if (roundDeck.length === 0) {
     if (round >= 3) {
       showGameOver();
