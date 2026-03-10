@@ -823,6 +823,7 @@ let turnResults = []; // {card, guessed}
 let gameMode = 'coop';   // 'coop' | 'team'
 let teams = [];          // [{name, score}, ...]
 let currentTeamIndex = 0;
+let lastDeckSize = 45;
 
 function loadCards() {
   updateCardCount();
@@ -926,6 +927,7 @@ document.getElementById('start-game-btn').addEventListener('click', () => {
   filteredCards = getFilteredCards();
   const deckSize = getDeckSize();
   if (filteredCards.length < deckSize) return;
+  lastDeckSize = deckSize;
   gameDeck = shuffle([...filteredCards]).slice(0, deckSize);
   round = 1;
   currentTeamIndex = 0;
@@ -1144,11 +1146,17 @@ function showGameOver() {
   showScreen('gameover');
 }
 
-// --- Play Again ---
-document.getElementById('play-again-btn').addEventListener('click', () => {
-  showScreen('setup');
+// --- Return to Setup ---
+function returnToSetup() {
+  const slider = document.getElementById('deck-size-slider');
+  slider.value = lastDeckSize;
+  document.getElementById('deck-size-value').textContent = lastDeckSize;
   updateCardCount();
-});
+  showScreen('setup');
+}
+
+// --- Play Again ---
+document.getElementById('play-again-btn').addEventListener('click', returnToSetup);
 
 // --- Back to Menu ---
 let returnScreen = null;
@@ -1167,8 +1175,7 @@ document.getElementById('back-play-btn').addEventListener('click', () => {
 document.getElementById('confirm-quit-yes').addEventListener('click', () => {
   returnScreen = null;
   currentCard = null;
-  showScreen('setup');
-  updateCardCount();
+  returnToSetup();
 });
 
 document.getElementById('confirm-quit-no').addEventListener('click', () => {
