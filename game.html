@@ -597,6 +597,11 @@
   <label class="language-option"><input type="checkbox" value="dm" id="lang-dm"> Família Dart-Miller</label>
   <p id="card-count" class="deck-info"></p>
   <button class="btn" id="start-game-btn">Start Game</button>
+  <button id="debug-toggle" style="margin-top:1.5rem;background:none;border:none;font-size:0.7rem;color:var(--text-dim);opacity:0.4;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;font-family:inherit;">Debug</button>
+  <div id="debug-menu" style="display:none;gap:0.5rem;">
+    <button class="team-count-btn" id="timer-10-btn" data-duration="10">10s</button>
+    <button class="team-count-btn active" id="timer-60-btn" data-duration="60">60s</button>
+  </div>
 </div>
 
 <!-- READY SCREEN -->
@@ -686,7 +691,7 @@
 </div>
 
 <script>
-const TURN_DURATION = 60;
+let TURN_DURATION = 60;
 function getDeckSize() { return parseInt(document.getElementById('deck-size-slider').value); }
 
 document.getElementById('deck-size-slider').addEventListener('input', () => {
@@ -753,7 +758,7 @@ const allCards = [
   {title:"Bill Cipher",description:"Equilateral psycokinetic dream demon, the antagonist of the 2010s show 'Gravity Falls', voiced by Alex Hirsch.",points:2,language:"en"},
   {title:"Synchronized Swimming",description:"Sport where teammembers perform hydroginastics trying to keep the rhythm with everyone else.",points:1,language:"en"},
   {title:"Carcassone",description:"A mountainous region in southern France, and also a popular tile-placing boardgame that originated the term 'meeples'.",points:3,language:"en"},
-  {title:"Slay the Spire",description:"Popular indie deckbuilding videogame that has the player fighting avian Cultists as they ascend a terrible tower.",points:3,language:"en"},
+  {title:"Slay the Spire",description:"Popular indie deckbuilding videogame that has the player fighting avian Cultists while they ascend a terrible tower.",points:3,language:"en"},
   {title:"Chico Buarque",description:"Popular cantor brasileiro famoso por m\u00fasicas contra a ditadura como Meu Caro Amigo e Apesar de Voc\u00ea.",points:1,language:"dm"},
   {title:"Millenium Falcon",description:"I'll have you know, this ship managed the Kessel Run in under 12 parsecs! Just ask Han or Chewie.",points:1,language:"en"},
   {title:"Big Bad Wolf",description:"Antagonist to both Little Red Riding Hood and the Three Little Pigs, he keeps himself busy in the forest.",points:1,language:"en"},
@@ -810,7 +815,14 @@ const allCards = [
   {title:"J. Jonah Jameson",description:"Editor of the Daily Bugle and proclaimed hater no. 1 of Spider-Man, always thinks the \"Masked Menace\" is up to no good.",points:1,language:"en"},
   {title:"Slinky",description:"A weird-looking metal or plastic coil, this toy that can walk down steps was first introduced in 1945 and has sold over 300 million units.",points:1,language:"en"},
   {title:"Scratch (Programming System)",description:"This graphical software was created at MIT and enables kids around the world to code their own simple games.",points:2,language:"en"},
-  {title:"Box Fart",description:"The annoying sound a game board container will sometimes make when the lid is pushed down over the lower part. It sounds like a human passing gas.",points:2,language:"en"}
+  {title:"Box Fart",description:"The annoying sound a game board container will sometimes make when the lid is pushed down over the lower part. It sounds like a human passing gas.",points:2,language:"en"},
+  {title:"Magic: the Gathering",description:"A collectible card game created by Richard Garfield in 1993. It's not Pokemon but can be very addictive! Billions of cards were already printed.",points:2,language:"en"},
+  {title:"Galileo (Galilei)",description:"Italian astronomer born in 1564, discoverer of the rings of Saturn, and also the physicist known for creating the Scientific Method and for his studies on free fall. Died in house arrest enforced by the Inquisition for defending the Copernican view that the Earth revolved around the Sun.",points:3,language:"en"},
+  {title:"Dune",description:"Also known as Arrakis, this planet is the source of the Spice M\u00e9lange in Frank Herbert's sci-fi novel of the same name. Just don't make the Fremen angry...",points:3,language:"en"},
+  {title:"Jeopardy!",description:"What is a show started in 1964 where contestants are supposed to answer the riddles in the form of a question?",points:1,language:"en"},
+  {title:"Pyramids of Giza",description:"Last Wonder of the Ancient World still standing, these pointy structures are located near Cairo, Egypt and have been standing for about 4500 years.",points:1,language:"en"},
+  {title:"Ice Hockey",description:"They say it's a sport but I just see players throwing their gloves down and duking it out. Not sure what would hurt more, the big clubs or the sharp metal skates!",points:1,language:"en"},
+  {title:"Gimli (the Dwarf)",description:"He built a friendship with Legolas the elf while they adventured around Middle-Earthed. He's short, stout, carries a big axe and loves keeping track of their kills.",points:2,language:"en"}
 ];
 let filteredCards = [];
 let gameDeck = [];    // the full deck for the game (DECK_SIZE cards)
@@ -863,12 +875,27 @@ document.getElementById('mode-team-btn').addEventListener('click', () => {
   renderTeamNameInputs(selectedTeamCount);
 });
 
-document.querySelectorAll('.team-count-btn').forEach(btn => {
+document.querySelectorAll('#team-config .team-count-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     selectedTeamCount = parseInt(btn.dataset.count);
-    document.querySelectorAll('.team-count-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#team-config .team-count-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
     renderTeamNameInputs(selectedTeamCount);
+  });
+});
+
+// --- Debug: toggle ---
+document.getElementById('debug-toggle').addEventListener('click', () => {
+  const menu = document.getElementById('debug-menu');
+  menu.style.display = menu.style.display === 'none' ? 'flex' : 'none';
+});
+
+// --- Debug: timer duration ---
+document.querySelectorAll('[data-duration]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    TURN_DURATION = parseInt(btn.dataset.duration);
+    document.querySelectorAll('[data-duration]').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
   });
 });
 
