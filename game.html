@@ -439,6 +439,55 @@
     margin: 1em 0 1em;
   }
 
+  /* === Theme picker === */
+  .theme-picker {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    justify-content: center;
+    width: 100%;
+    max-width: 300px;
+  }
+  .theme-swatch {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.15s, border-color 0.15s;
+    outline: none;
+    flex-shrink: 0;
+  }
+  .theme-swatch:hover { transform: scale(1.12); }
+  .theme-swatch.active {
+    border-color: var(--text);
+    transform: scale(1.12);
+  }
+  .theme-swatch.active::after {
+    content: '';
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    border: 2px solid rgba(0,0,0,0.3);
+  }
+  .theme-swatch[title]:hover::before {
+    content: attr(title);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text);
+    color: var(--bg);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    pointer-events: none;
+  }
+
   /* === Mode toggle & team config === */
   .mode-toggle {
     display: flex;
@@ -597,6 +646,9 @@
   <label class="language-option"><input type="checkbox" value="dm" id="lang-dm"> Família Dart-Miller</label>
   <p id="card-count" class="deck-info"></p>
   <button class="btn" id="start-game-btn">Start Game</button>
+  <p style="font-size:0.75rem;color:var(--text-dim);letter-spacing:0.06em;text-transform:uppercase;margin-top:0.5rem;">Theme</p>
+  <div class="theme-picker" id="theme-picker"></div>
+
   <button id="debug-toggle" style="margin-top:1.5rem;background:none;border:none;font-size:0.7rem;color:var(--text-dim);opacity:0.4;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;font-family:inherit;">Debug</button>
   <div id="debug-menu" style="display:none;gap:0.5rem;">
     <button class="team-count-btn" id="timer-10-btn" data-duration="10">10s</button>
@@ -1219,7 +1271,121 @@ document.getElementById('confirm-quit-no').addEventListener('click', () => {
   returnScreen = null;
 });
 
+// --- Themes ---
+const THEMES = [
+  {
+    id: 'noir',
+    name: 'Gold & Noir',
+    swatch: '#C8A45C',
+    vars: {
+      '--gold':      '#C8A45C',
+      '--gold-dim':  'rgba(200,164,92,0.4)',
+      '--gold-glow': 'rgba(200,164,92,0.12)',
+      '--bg':        '#08080A',
+      '--surface':   'rgba(255,255,255,0.03)',
+      '--border':    'rgba(255,255,255,0.07)',
+      '--text':      '#E8E6E3',
+      '--text-dim':  'rgba(232,230,227,0.4)',
+      '--green':     '#5CB870',
+      '--red':       '#D94F4F',
+    }
+  },
+  {
+    id: 'midnight',
+    name: 'Midnight Library',
+    swatch: '#5BBFB5',
+    vars: {
+      '--gold':      '#5BBFB5',
+      '--gold-dim':  'rgba(91,191,181,0.35)',
+      '--gold-glow': 'rgba(91,191,181,0.1)',
+      '--bg':        '#0A0F1E',
+      '--surface':   'rgba(91,191,181,0.05)',
+      '--border':    'rgba(91,191,181,0.1)',
+      '--text':      '#F0EDE6',
+      '--text-dim':  'rgba(240,237,230,0.4)',
+      '--green':     '#5CB870',
+      '--red':       '#D9635A',
+    }
+  },
+  {
+    id: 'velvet',
+    name: 'Velvet & Champagne',
+    swatch: '#E8C97A',
+    vars: {
+      '--gold':      '#E8C97A',
+      '--gold-dim':  'rgba(232,201,122,0.4)',
+      '--gold-glow': 'rgba(232,201,122,0.1)',
+      '--bg':        '#12080E',
+      '--surface':   'rgba(255,220,200,0.04)',
+      '--border':    'rgba(255,200,180,0.09)',
+      '--text':      '#F5EEE8',
+      '--text-dim':  'rgba(245,238,232,0.4)',
+      '--green':     '#7BC47F',
+      '--red':       '#D9635A',
+    }
+  },
+  {
+    id: 'forest',
+    name: 'Forest & Ember',
+    swatch: '#E07A30',
+    vars: {
+      '--gold':      '#E07A30',
+      '--gold-dim':  'rgba(224,122,48,0.4)',
+      '--gold-glow': 'rgba(224,122,48,0.1)',
+      '--bg':        '#080E0A',
+      '--surface':   'rgba(224,122,48,0.05)',
+      '--border':    'rgba(224,122,48,0.12)',
+      '--text':      '#EDE8E0',
+      '--text-dim':  'rgba(237,232,224,0.4)',
+      '--green':     '#6BBF72',
+      '--red':       '#D94F4F',
+    }
+  },
+  {
+    id: 'chalk',
+    name: 'Chalk & Slate',
+    swatch: '#2D4A7A',
+    vars: {
+      '--gold':      '#2D4A7A',
+      '--gold-dim':  'rgba(45,74,122,0.35)',
+      '--gold-glow': 'rgba(45,74,122,0.08)',
+      '--bg':        '#F4F1EC',
+      '--surface':   'rgba(0,0,0,0.04)',
+      '--border':    'rgba(0,0,0,0.1)',
+      '--text':      '#1A1A1A',
+      '--text-dim':  'rgba(26,26,26,0.45)',
+      '--green':     '#2E7D45',
+      '--red':       '#C0392B',
+    }
+  },
+];
+
+function applyTheme(id) {
+  const theme = THEMES.find(t => t.id === id) || THEMES[0];
+  const root = document.documentElement.style;
+  for (const [prop, val] of Object.entries(theme.vars)) root.setProperty(prop, val);
+  document.querySelectorAll('.theme-swatch').forEach(s => {
+    s.classList.toggle('active', s.dataset.theme === id);
+  });
+  localStorage.setItem('gw-theme', id);
+}
+
+function buildThemePicker() {
+  const picker = document.getElementById('theme-picker');
+  THEMES.forEach(theme => {
+    const btn = document.createElement('button');
+    btn.className = 'theme-swatch';
+    btn.dataset.theme = theme.id;
+    btn.title = theme.name;
+    btn.style.background = theme.swatch;
+    btn.addEventListener('click', () => applyTheme(theme.id));
+    picker.appendChild(btn);
+  });
+}
+
 // --- Init ---
+buildThemePicker();
+applyTheme(localStorage.getItem('gw-theme') || 'noir');
 loadCards();
 </script>
 <div class="version">
