@@ -6,7 +6,7 @@
 <link rel="icon" type="image/x-icon" href="request.png">
 <title>Guess What?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root {
     --gold: #C8A45C;
@@ -60,18 +60,19 @@
 
   /* === Typography === */
   h1 {
-    font-family: 'DM Serif Display', Georgia, serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 2.4rem;
-    font-weight: 400;
+    font-weight: 700;
     color: var(--gold);
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
     margin-bottom: 0.2rem;
   }
   h2 {
-    font-family: 'DM Serif Display', Georgia, serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 1.6rem;
-    font-weight: 400;
+    font-weight: 700;
     color: var(--gold);
+    letter-spacing: -0.01em;
   }
   h3 { font-size: 1rem; color: var(--text-dim); font-weight: 400; }
   p { line-height: 1.6; color: var(--text-dim); font-weight: 300; font-size: 0.95rem; }
@@ -145,9 +146,9 @@
 
   /* === Timer === */
   .timer {
-    font-family: 'DM Serif Display', Georgia, serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 3.2rem;
-    font-weight: 400;
+    font-weight: 700;
     font-variant-numeric: tabular-nums;
     color: var(--text);
   }
@@ -196,9 +197,9 @@
   }
   .card-box::after { display: none; }
   .card-title {
-    font-family: 'DM Serif Display', Georgia, serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 1.7rem;
-    font-weight: 400;
+    font-weight: 700;
     color: var(--gold);
     margin-bottom: 0.8rem;
     text-shadow: none;
@@ -269,9 +270,9 @@
   .book-closed .brass-clasp { display: none; }
   .book-closed-frame { display: none; }
   .book-closed-title {
-    font-family: 'DM Serif Display', Georgia, serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 2rem;
-    font-weight: 400;
+    font-weight: 700;
     color: var(--gold);
     text-shadow: none;
     position: relative;
@@ -358,8 +359,9 @@
     text-transform: uppercase;
   }
   .slider-value {
-    font-family: 'DM Serif Display', Georgia, serif;
+    font-family: 'Outfit', sans-serif;
     font-size: 1.5rem;
+    font-weight: 700;
     color: var(--gold);
     line-height: 1;
   }
@@ -602,7 +604,8 @@
     font-weight: 700;
   }
   .scoreboard-row .score-pts {
-    font-family: 'DM Serif Display', Georgia, serif;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
     font-size: 1.2rem;
     color: var(--gold);
   }
@@ -874,7 +877,8 @@ const allCards = [
   {title:"Jeopardy!",description:"What is a show started in 1964 where contestants are supposed to answer the riddles in the form of a question?",points:1,language:"en"},
   {title:"Pyramids of Giza",description:"Last Wonder of the Ancient World still standing, these pointy structures are located near Cairo, Egypt and have been standing for about 4500 years.",points:1,language:"en"},
   {title:"Ice Hockey",description:"They say it's a sport but I just see players throwing their gloves down and duking it out. Not sure what would hurt more, the big clubs or the sharp metal skates!",points:1,language:"en"},
-  {title:"Gimli (the Dwarf)",description:"He built a friendship with Legolas the elf while they adventured around Middle-Earthed. He's short, stout, carries a big axe and loves keeping track of their kills.",points:2,language:"en"}
+  {title:"Gimli (the Dwarf)",description:"Son of Gl\u00f3in, he built a friendship with Legolas the Elf while they adventured around Middle-Earth. He's short, stout, carries a big axe and loves keeping track of his kills.",points:2,language:"en"},
+  {title:"(Like a) Bull in a China Shop",description:"Expression for when someone is awkward, destroying everything they touch, and in general causing a lot of damage. References a strong animal in a store full of fragile and delicate objects.",points:2,language:"en"}
 ];
 let filteredCards = [];
 let gameDeck = [];    // the full deck for the game (DECK_SIZE cards)
