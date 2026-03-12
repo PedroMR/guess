@@ -1,4 +1,4 @@
-
+git restore game.html && echo "Restored game.html (version shenanigans)" 
 git pull && echo "Pulled."
 
 #COMMIT_HASH=$(git rev-parse HEAD)
